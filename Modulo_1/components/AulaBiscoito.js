@@ -5,7 +5,7 @@ let cor = '#dd7b22'
 let segundaCor = '#121212'
 
 const Biscoito = () => {
-    const [img, setImg] = useState(require('../assets/biscoito.png'));
+    const [img, setImg] = useState(require('../assets/AulaBiscoito/biscoito.png'));
     const [textoFrase, setTextoFrase] = useState("Aplicativo 'Biscoito da Sorte'.")
     
 
@@ -23,11 +23,11 @@ const Biscoito = () => {
         let numeroAleatorio = Math.floor(Math.random() * frases.length)
         setTextoFrase('"' + frases[numeroAleatorio] + '"')
     
-        setImg(require('../assets/biscoitoAberto.png'))
+        setImg(require('../assets/AulaBiscoito/biscoitoAberto.png'))
     }
     
     function reiniciar() {
-        setImg(require('../assets/biscoito.png'))
+        setImg(require('../assets/AulaBiscoito/biscoito.png'))
         setTextoFrase("Aplicativo 'Biscoito da Sorte'")
     }
     return (

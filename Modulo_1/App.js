@@ -1,11 +1,13 @@
-// import Biscoito from "./components/Biscoito";
-// import Cronometro from "./components/Cronometro";
+// import Biscoito from "./components/AulaBiscoito";
+// import Cronometro from "./components/AulaCronometro";
 // import AulaFlatList from "./components/AulaFlatList/AulaFlatList";
 // import AulaPickerHooks from "./components/AulaPicker";
 // import AulaSlider from "./components/AulaSlider";
 // import AulaSwitch from "./components/AulaSwitch";
 
-import DesafioModulo from "./components/DesafioModulo";
+import AulaInstagram from "./components/AulaInstagram/AulaInstagram";
+
+// import DesafioModulo from "./components/DesafioModulo";
 
 function App() {
 
@@ -17,7 +19,8 @@ function App() {
       {/* <AulaPickerHooks /> */}
       {/* <AulaSlider /> */}
       {/* <AulaSwitch /> */}
-      <DesafioModulo />
+      {/* <DesafioModulo /> */}
+      <AulaInstagram />
     </>
   );
 }

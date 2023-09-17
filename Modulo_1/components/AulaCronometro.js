@@ -64,7 +64,7 @@ const Cronometro = () => {
 
     return (
         <View style = {styles.container} >
-            <Image source = { require('../assets/crono.png') } />
+            <Image source = { require('../assets/AulaCronometro/crono.png') } />
             <Text style = {styles.timer}> { numero } </Text>
 
             <View style={styles.btnArea}>
