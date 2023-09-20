@@ -9,6 +9,9 @@ import AulaInstagram from "./components/AulaInstagram/AulaInstagram";
 
 // import DesafioModulo from "./components/DesafioModulo";
 
+// import AulaAsyncStorageUseMemoUseRef from "./components/AulaAsyncStorageUseMemoUseRef";
+import AulaModal from "./components/AulaModal/AulaModal";
+
 function App() {
 
   return (
@@ -19,8 +22,13 @@ function App() {
       {/* <AulaPickerHooks /> */}
       {/* <AulaSlider /> */}
       {/* <AulaSwitch /> */}
+      
+      {/* <AulaInstagram /> */}
+      
       {/* <DesafioModulo /> */}
-      <AulaInstagram />
+
+      {/* <AulaAsyncStorageUseMemoUseRef /> */}
+      <AulaModal />
     </>
   );
 }
