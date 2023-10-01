@@ -10,7 +10,9 @@ import AulaInstagram from "./components/AulaInstagram/AulaInstagram";
 // import DesafioModulo from "./components/DesafioModulo";
 
 // import AulaAsyncStorageUseMemoUseRef from "./components/AulaAsyncStorageUseMemoUseRef";
-import AulaModal from "./components/AulaModal/AulaModal";
+// import AulaModal from "./components/AulaModal/AulaModal";
+// import AulaReactNavigationStack from "./components/AulaReactNavigationStack/AulaReactNavigationStack";
+// import AulaReactNavigationTabs from "./components/AulaReactNavigationTabs/AulaReactNavigationTabs";
 
 function App() {
 
@@ -23,12 +25,14 @@ function App() {
       {/* <AulaSlider /> */}
       {/* <AulaSwitch /> */}
       
-      {/* <AulaInstagram /> */}
+      <AulaInstagram />
       
       {/* <DesafioModulo /> */}
 
       {/* <AulaAsyncStorageUseMemoUseRef /> */}
-      <AulaModal />
+      {/* <AulaModal /> */}
+      {/* <AulaReactNavigationStack /> */}
+      {/* <AulaReactNavigationTabs /> */}
     </>
   );
 }
