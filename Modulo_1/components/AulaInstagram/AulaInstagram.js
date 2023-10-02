@@ -12,7 +12,7 @@ const AulaInstagram = () => {
             nome: 'Nathan Santos',
             descricao: 'Ela não me quis de novo',
             imgPerfil: require('../../assets/AulaInsta/perfil.jpg'),
-            imgPublicacao: 'https://scontent.fjdo1-2.fna.fbcdn.net/v/t39.30808-6/325279156_5798280343584542_45276113153990543_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=a2f6c7&_nc_ohc=m1nRWZwNx58AX8RBfTC&_nc_ht=scontent.fjdo1-2.fna&oh=00_AfC-W5XtvtP4YDiJnXwsLdbPLh-FKNGt8aAtYbLr7nbqRg&oe=650CF61D',
+            imgPublicacao: 'https://images.uncyc.org/commons/6/64/Jornal_canaldoboi.jpg',
             curtida: true,
             curtidas: 1
         },

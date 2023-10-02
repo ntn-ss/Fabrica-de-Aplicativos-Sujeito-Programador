@@ -13,9 +13,10 @@ import AulaInstagram from "./components/AulaInstagram/AulaInstagram";
 // import AulaModal from "./components/AulaModal/AulaModal";
 // import AulaReactNavigationStack from "./components/AulaReactNavigationStack/AulaReactNavigationStack";
 // import AulaReactNavigationTabs from "./components/AulaReactNavigationTabs/AulaReactNavigationTabs";
-
+// import AulaReactNavigationStackComTabs from "./components/AulaReactNavigationStackComTabs/AulaReactNavigationStackComTabs";
+// import AulaReactNavigationDrawer from "./components/AulaReactNavigationDrawer/AulaReactNavigationDrawer";
 function App() {
-
+  
   return (
     <>
       {/* <Biscoito /> */}
@@ -33,6 +34,8 @@ function App() {
       {/* <AulaModal /> */}
       {/* <AulaReactNavigationStack /> */}
       {/* <AulaReactNavigationTabs /> */}
+      {/* <AulaReactNavigationStackComTabs /> */}
+      {/* <AulaReactNavigationDrawer /> */}
     </>
   );
 }
