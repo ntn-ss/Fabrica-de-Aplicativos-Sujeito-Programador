@@ -1,11 +1,13 @@
 import { StyleSheet, View } from 'react-native';
 
-import AppFilmes from './src/components/Filmes/AppFilmes';
+// import AppFilmes from './src/components/Filmes/AppFilmes';
+import AppConversor from './src/components/ConversorMoeda/AppConversor';
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <AppFilmes />
+      {/* <AppFilmes /> */}
+      <AppConversor />
     </View>
   );
 }
