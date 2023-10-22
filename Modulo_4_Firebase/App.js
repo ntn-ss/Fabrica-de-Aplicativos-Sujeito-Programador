@@ -1,11 +1,15 @@
 import { StyleSheet, View } from 'react-native';
-import HelloWorld from './src/components/HelloWorld';
+
+import InsercaoDinamica from './src/components/InsercaoDinamica/InsercaoDinamica';
+import Cadastro from './src/components/CadastroeLogin/Cadastro';
+import Login from './src/components/CadastroeLogin/Login';
 
 export default function App() {
 
   return (
     <View style={styles.container}>
-      <HelloWorld />
+      {/* <InsercaoDinamica /> */}
+      <Login />
     </View>
   );
 }
