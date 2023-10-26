@@ -4,52 +4,61 @@ import { TouchableOpacity, StyleSheet, Text, TextInput, View } from "react-nativ
 import app from "../../firebase/firebaseConnection";
 
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { getFirestore, addDoc, collection, setDoc, doc } from "firebase/firestore";
 
 const auth = getAuth(app)
+const firestore = getFirestore(app)
 
 const Cadastro = () => {
+    const nomeRef = useRef()
     const emailRef = useRef()
     const senhaRef = useRef()
     const repitaSenhaRef = useRef()
 
     const cadastrar = async() => {
-        if (emailRef.current.value != '' && senhaRef.current.value != '' && repitaSenhaRef.current.value != '') {
-            if (senhaRef.current.value == repitaSenhaRef.current.value) {
-                await createUserWithEmailAndPassword(auth, emailRef.current.value, senhaRef.current.value)
-                .then((value)=> {
-                    alert(`Usuário criado: ${value.user.email}.`)
+        if (nomeRef.current.value !== '' && emailRef.current.value !== '' && senhaRef.current.value !== '' && repitaSenhaRef.current.value !== '') {
+            if (senhaRef.current.value === repitaSenhaRef.current.value) {
+                try {
+                    const usuarioCredencial = await createUserWithEmailAndPassword(auth, emailRef.current.value, senhaRef.current.value);
+                    const docRef = doc(firestore, 'usuarios', usuarioCredencial.user.uid);
+                    const docData = {
+                        'nome': nomeRef.current.value,
+                        'email': emailRef.current.value
+                    };
+    
+                    await setDoc(docRef, docData);
+    
+                    alert(`Usuário criado: ${usuarioCredencial.user.email}`);
                     
-                    emailRef.current.value=''
-                    repitaSenhaRef.current.value=''
-                    senhaRef.current.value=''
-                })
-                .catch((e)=>{
+                    nomeRef.current.value = '';
+                    emailRef.current.value = '';
+                    repitaSenhaRef.current.value = '';
+                    senhaRef.current.value = '';
+                } catch (e) {
                     if (e.code === 'auth/weak-password') {
-                        alert('Sua senha deve ter, no mínimo, seis caracteres.')
-                        return
-                    }
-                    if (e.code === 'auth/invalid-email') {
-                        alert('Insira um e-mail válido.')
-                        return
+                        alert('Sua senha deve ter, no mínimo, seis caracteres.');
+                    } else if (e.code === 'auth/invalid-email') {
+                        alert('Insira um e-mail válido.');
                     } else {
-                        alert(`Algo deu errado: ${e}`)
-                        return
+                        alert(`Algo deu errado: ${e}`);
                     }
-                })
+                }
+            } else {
+                alert('Os campos de senha devem ser iguais.');
             }
-            else {
-                alert('Os campos de senha devem ser iguais.')
-            }
-        }
-        else {
-            alert('Preencha os três campos.')
+        } else {
+            alert('Preencha todos os campos.');
         }
     }
     
+    
     return (
         <View style={styles.container}>
+            <Text style={styles.text}>Nome: </Text>
+            <TextInput style={styles.input} ref={nomeRef} autoFocus />
+
             <Text style={styles.text}>E-mail: </Text>
-            <TextInput style={styles.input} ref={emailRef} autoFocus />
+            <TextInput style={styles.input} ref={emailRef} />
     
             <Text style={styles.text}>Senha: </Text>
             <TextInput style={styles.input} ref={senhaRef} secureTextEntry={true} />
