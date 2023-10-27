@@ -1,23 +1,57 @@
-import { useRef, useState } from 'react'
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, TextInput, FlatList, Keyboard } from 'react-native'
+import { useEffect, useRef, useState } from 'react'
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, TextInput, FlatList, Keyboard, ActivityIndicator } from 'react-native'
 
 import LoginECadastro from './components/LoginECadastro'
 import TaskList from './components/TaskList'
 
 import app from '../../firebase/firebaseConnection'
 
-import { doc, getFirestore, setDoc } from 'firebase/firestore'
+import { addDoc, collection, deleteDoc, doc, getDocs, getFirestore, query, setDoc } from 'firebase/firestore'
+
+import Feather from '@expo/vector-icons/Feather'
 
 const LogineCadastro = () => {
     const firestore = getFirestore(app)
 
     const [user, setUser] = useState(null)
-    const taskRef = useRef()
+    const taskRef = useRef(null)
 
     const [tasks, setTasks] = useState([])
+    const [loading, setLoading] = useState(false)
+    const [key, setKey] = useState('')
 
-    const handleEdit = async (data) => {
-        alert("Clicou em "+data.name);
+    useEffect(() => {
+      const getUser = () => {
+        if (!user) {
+            return;
+        }
+        pegaDados()
+      }
+
+      getUser()
+    }, [user])
+    
+    const pegaDados = async () => {
+        try{
+            setLoading(true)
+            const q = query(collection(firestore, 'tarefas', user, 'tarefasUsuario'))
+            const querySnapshot = await getDocs(q)
+
+            setTasks([])
+
+            querySnapshot?.forEach((doc)=>{
+                let data = {
+                    'key': doc.id,
+                    'name': doc.data().name
+                }
+                
+                setTasks(oldArray => [...oldArray, data].reverse())
+            })
+            setLoading(false)
+        }
+        catch(e){
+            alert(e)
+        }
     }
 
     const handleAdd = async () => {
@@ -25,33 +59,87 @@ const LogineCadastro = () => {
             alert('Digite algo.')
             return
         }
-        else {
-            let docRef = doc(firestore, 'tarefas', user)
-            let key = docRef.id
-            let docData = {
+        else if (key != '') {
+            const userTasksRef = doc(firestore, 'tarefas', user, 'tarefasUsuario', key)
+            const docData = {
                 'name': taskRef.current.value
             }
-            
-            await setDoc(docRef, docData)
+            await setDoc(userTasksRef, docData)
             .then(()=>{
-                const data = {
-                    'key': key,
+                taskRef.current.value = ''
+                setKey('')
+                Keyboard.dismiss()
+                
+                alert('Atualizou com sucesso.')
+
+                pegaDados()
+                
+                return
+            })
+            .catch((e)=>{
+                alert(`Erro ${e}`)
+            })
+        }
+        else {
+            try {
+                const userTasksRef = doc(firestore, 'tarefas', user)
+                const newTaskRef = collection(userTasksRef, 'tarefasUsuario')
+                const docData = {
                     'name': taskRef.current.value
                 }
                 
-                setTasks(oldTasks => [... oldTasks, data])
-            })
-            .catch((e)=>{
-                alert(`Erro, ${e}`)
-            })
-            
-            Keyboard.dismiss()
-            taskRef.current.value = ''            
+                addDoc(newTaskRef, docData)
+                .then((addedDocRef)=>{
+                    const data = {
+                        'key': addedDocRef.id,
+                        'name': taskRef.current.value
+                    }
+                    
+                    setTasks(oldTasks => [... oldTasks, data].reverse())
+                    pegaDados()
+                })
+                .catch((e)=>{
+                    alert(`Erro, ${e}`)
+                })
+                
+                Keyboard.dismiss()
+                taskRef.current.value = ''
+            } catch (e) {
+                alert(`Erro ${e}`)
+            }
         }
     }
 
-    const handleDelete = async (key) => {
-        alert(key)
+    const handleEdit = async (data) => {
+        setKey(data.key)
+        taskRef.current.value = data.name
+        taskRef.current.focus()
+    }
+
+    const cancelEdit = () => {
+        setKey('')
+        taskRef.current.value = ''
+        Keyboard.dismiss()
+    }
+
+    const handleDelete = async (taskKey) => {
+        try {
+            const userTasksRef = doc(firestore, 'tarefas', user)
+            const taskDocRef = doc(userTasksRef, 'tarefasUsuario', taskKey)
+
+            await deleteDoc(taskDocRef)
+            .then(()=>{
+                const updatedTasks = tasks.filter( (item)=>item.key !== taskKey )
+                setTasks(updatedTasks)
+
+                alert('Apagou com sucesso.')
+            })
+            .catch((e)=>{
+                alert(`Erro ${e}`)
+            })
+        } catch (e) {
+            alert(`Erro ${e}`)
+        }
     }
     
     if (!user) {
@@ -64,21 +152,33 @@ const LogineCadastro = () => {
     else {
         return (
             <SafeAreaView style={styles.container}>
+                {key &&
+                    <View style={{flexDirection: 'row', marginBottom: 8}}>
+                        <TouchableOpacity onPress={ ()=>cancelEdit() }>
+                            <Feather name='x-circle' size={20} color='red'/>
+                        </TouchableOpacity>
+                        <Text style={{marginLeft: 5, color: 'red'}}>
+                            Você está editando uma tarefa.
+                        </Text>
+                    </View>
+                }
+
                 <View style={styles.taskContainer}>
                     <TextInput style={styles.input} placeholder={'O que vamos fazer hoje?'} ref={taskRef} autofocus />
                     <TouchableOpacity style={styles.addBtn} onPress={()=>handleAdd()} >
                         <Text style={styles.btnText}>+</Text>
                     </TouchableOpacity>
                 </View>
-
-                <FlatList
-                    data = {tasks}
-                    keyExtractor = { item => item.key }
-                    renderItem = { ({ item })=>(
-                        <TaskList data={item} deleteItem={handleDelete} editItem={handleEdit} />
-                    )}
-                />
-
+                {loading ?
+                    (<ActivityIndicator size='large' color='lightblue' />) :
+                    (<FlatList
+                        data = {tasks}
+                        keyExtractor = { item => item.key }
+                        renderItem = { ({ item })=>(
+                            <TaskList data={item} deleteItem={handleDelete} editItem={handleEdit} />
+                        )}
+                    />)
+                }
             </SafeAreaView>
         )
     }
@@ -116,7 +216,8 @@ const styles=StyleSheet.create({
     },
     btnText: {
         color: 'lightgreen',
-        fontweight: 'bold'
+        fontWeight: 'bold',
+        fontSize: 17
     }
 })
 
