@@ -18,12 +18,10 @@ const AuthProvider = ({ children }) => {
         
         if (storageUser) {
           setUser(JSON.parse(storageUser))
-          setLoading(false)
         }
-        
-        loadStorage()
         setLoading(false)
       }
+      loadStorage()
     }, [])
 
     const signIn = async(email, password) => {
@@ -44,31 +42,33 @@ const AuthProvider = ({ children }) => {
           setUser(data)
           storageUser(data)
         }
-        
       })
       .catch((err)=>alert(err.code))
     }
 
     const signUp = async (email, password, nome) => {
-      await createUserWithEmailAndPassword(auth, email, password)
-      .then(async (value)=>{
-        const uid = value.user.uid;
-        const docRef = doc(firestore, 'users', uid)
-        await setDoc(docRef, {
-          saldo: 0,
-          nome, 
+      try {
+        await createUserWithEmailAndPassword(auth, email, password)
+        .then(async (value)=>{
+          const uid = value.user.uid;
+          const docRef = doc(firestore, 'users', uid)
+          await setDoc(docRef, {
+            saldo: 0,
+            nome, 
+          })
+          .then(()=>{
+            const data = {
+              uid,
+              nome,
+              email: value.user.email
+            }
+            setUser(data)
+            storageUser(data)
+          })
         })
-        .then(()=>{
-          const data = {
-            uid,
-            nome,
-            email: value.user.email
-          }
-          setUser(data)
-          storageUser(data)
-        })
-        .catch((err)=>alert(err.code))
-      })
+      } catch (error) {
+        alert(error.message)
+      }
     }
 
     async function storageUser(data) {

@@ -19,7 +19,7 @@ const SignUp = () => {
 
   const { signUp } = useContext(AuthContext)
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     if (!email || !password || !name) {
       alert('Por favor, preencha todos os campos.');
       return;

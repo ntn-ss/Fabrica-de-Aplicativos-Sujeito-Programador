@@ -20,8 +20,8 @@ const Home = () => {
       <Text>Home</Text>
       <Text>{user && user.nome}</Text>
       <Text>{user && user.email}</Text>
-      <TouchableOpacity onPress={()=>handleLogout()}>
-        <Text>Sair</Text>
+      <TouchableOpacity style={{padding: 15, backgroundColor: '#131313'}} onPress={()=>handleLogout()}>
+        <Text style={{color: '#eee', fontSize: 20, fontWeight: 'bold', textAlign: 'center'}}>Sair</Text>
       </TouchableOpacity>
     </View>
   )
