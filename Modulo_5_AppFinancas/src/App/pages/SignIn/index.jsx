@@ -2,16 +2,26 @@
 import {Background, Container, Logo, LogoArea, InputArea, Input, SubmitButton, Link, SubmitText, LinkText} from './styles'
 
 // hooks
-import { app } from '../../services/firebaseConn'
-import { useRef } from 'react'
+import { useContext, useState } from 'react'
 import { Platform } from 'react-native'
 
 import { useNavigation } from '@react-navigation/native'
 
+// context
+import { AuthContext } from '../../contexts/auth'
+
 const SignIn = () => {
   const navigation = useNavigation()
-  const emailRef = useRef()
-  const passwordRef = useRef()
+  
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  const { signIn } = useContext(AuthContext)
+
+  const handleLogin = () => {
+    signIn(email, password)
+  }
+
   return (
     <Background>
       <Container
@@ -27,7 +37,8 @@ const SignIn = () => {
             autoFocus={true}
             autoCorrect={false}
             autoCapitalize='none'
-            ref={emailRef}
+            value={email}
+            onChangeText={(e)=>setEmail(e)}
           />
         </InputArea>
 
@@ -37,11 +48,12 @@ const SignIn = () => {
             autoCorrect={false}
             autoCapitalize='none'
             secureTextEntry={true}
-            ref={passwordRef}
+            value={password}
+            onChangeText={(e)=>setPassword(e)}
           />
         </InputArea>
 
-      <SubmitButton onPress={()=>alert('Entrou')}>
+      <SubmitButton onPress={()=>handleLogin()}>
         <SubmitText>Entrar</SubmitText>
       </SubmitButton>
 

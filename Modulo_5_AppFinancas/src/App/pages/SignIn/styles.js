@@ -23,9 +23,9 @@ export const InputArea = styled.View`
 `
 
 export const Input = styled.TextInput.attrs({
-    placeholderTextColor: 'rgba(255,255,255,0.20'
+    placeholderTextColor: 'rgba(255,255,255,0.30)'
 })`
-    background: rgba(0,0,0,0.20);
+    background: rgba(0,0,0,0.50);
     width: 90%;
     font-size: 17px;
     color: #eee;

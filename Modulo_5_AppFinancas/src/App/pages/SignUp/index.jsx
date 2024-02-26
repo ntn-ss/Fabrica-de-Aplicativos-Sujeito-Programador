@@ -2,18 +2,37 @@
 import {Background, Container, InputArea, Input, SubmitButton, Link, SubmitText, LinkText} from '../SignIn/styles'
 
 // hooks
-import { app } from '../../services/firebaseConn'
-import { useRef } from 'react'
+import { useContext, useState } from 'react'
 import { Platform } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
+
+// context
+import { AuthContext } from '../../contexts/auth'
 
 const SignUp = () => {
   const navigation = useNavigation()
   
-  const nameRef = useRef()
-  const emailRef = useRef()
-  const passwordRef = useRef()
-  const repeatPasswordRef = useRef()
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [repeatPassword, setRepeatPassword] = useState('')
+
+  const { signUp } = useContext(AuthContext)
+
+  const handleSignUp = () => {
+    if (!email || !password || !name) {
+      alert('Por favor, preencha todos os campos.');
+      return;
+    }
+  
+    if (password !== repeatPassword) {
+      alert('As senhas não coincidem.');
+      return;
+    }
+  
+    signUp(email, password, name);
+  }
+  
 
   return (
     <Background>
@@ -28,7 +47,8 @@ const SignUp = () => {
             autoFocus={true}
             autoCorrect={false}
             autoCapitalize='none'
-            ref={nameRef}
+            value={name}
+            onChangeText={(e)=>setName(e)}
           />
         </InputArea>
 
@@ -37,7 +57,8 @@ const SignUp = () => {
             placeholder="E-mail"
             autoCorrect={false}
             autoCapitalize='none'
-            ref={emailRef}
+            value={email}
+            onChangeText={(e)=>setEmail(e)}
           />
         </InputArea>
 
@@ -47,7 +68,8 @@ const SignUp = () => {
             autoCorrect={false}
             autoCapitalize='none'
             secureTextEntry={true}
-            ref={passwordRef}
+            value={password}
+            onChangeText={(e)=>setPassword(e)}
           />
         </InputArea>
 
@@ -57,11 +79,12 @@ const SignUp = () => {
             autoCorrect={false}
             autoCapitalize='none'
             secureTextEntry={true}
-            ref={repeatPasswordRef}
+            value={repeatPassword}
+            onChangeText={(e)=>setRepeatPassword(e)}
           />
         </InputArea>
 
-      <SubmitButton onPress={()=>alert('Cadastrou')}>
+      <SubmitButton onPress={()=>handleSignUp()}>
         <SubmitText>Cadastrar</SubmitText>
       </SubmitButton>
 
